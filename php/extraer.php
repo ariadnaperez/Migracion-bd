@@ -1,12 +1,9 @@
 <?php
     include "./conexion.php";
 
-   $sql = "SELECT pnombre, papellido FROM Empleado";
-   $stmt = sqlsrv_query( $conn, $sql);
-   while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
-       echo "<br></br>";
-      echo $row['pnombre']." ".$row['papellido']."<br />";
-   }
+    $sql1 = "SELECT name FROM sysdatabases order by crdate";
+    $stmt1 = sqlsrv_query( $conn, $sql1 );
 
-   sqlsrv_free_stmt( $stmt);
+    $sql2 = "SELECT name FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY name";
+    $stmt2 = sqlsrv_query( $conn, $sql2 );
 ?>
