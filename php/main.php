@@ -5,6 +5,16 @@
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="./js/Controlador.js"></script>
 
+<script language="javascript" > 
+function Obtener(){
+    var select = document.getElementById("nombreTablas"), //El <select>
+        value = select.value, //El valor seleccionado
+        text = select.options[select.selectedIndex].innerText; //El texto de la opción seleccionada
+
+        return text; 
+}
+</script> 
+
 <form action="./conversion.php" method="get">
   <p>Seleccione una Base de Datos</p>
   <select name="nombreBds" id="nombreBds">
@@ -38,53 +48,7 @@
     ?>
   </select>
 <!------------------------------------------Extraer Campos--------------------------------------->
-<p>Seleccione una tabla para ver sus campos y tipos de datos</p>
-  <select name="nombreCampos" id="nombreCampos">
-    <option value="default">----</option>
-    <?php
-      include "./extraer.php";
-      $i=0;
-      while( $row = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ): 
-    ?>
-    <option value="<?= $i?>"><?= $row['COLUMN_NAME']?></option>
-    <?php 
-      $i++; 
-      endwhile; 
-      sqlsrv_free_stmt( $stmt3);
-    ?>
-     <?php
-      include "./extraer.php";
-    if(isset($_POST['nombre']) && isset($_POST["tabla"])) {
-        $nombreBD = $_POST["Empleados"];
-        $nombreTabla = $_POST["EMPLEADOS"];
-        $serverName = "localhost";
-        $infoConnection = array("Database"=>Empleados,"UID"=>"sa1","PWD"=>"1234","CharacterSet"=>"UTF-8");
-        try {
-            $conn = sqlsrv_connect($serverName,$infoConnection);
-        } catch (Execption $e) {
-            die('Connected Failed:'. $e->getMessage());
-        }
-        $EMPLEADOS = "SELECT COLUMN_NAME AS COLUMNA , DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '$EMPLEADOS';";
 
-        $result = sqlsrv_query($conn,$query);
-        if(!$result) {
-            die('Query Failed'. sqlsrv_error($conn));
-        }
-
-        $json = array();
-        while($row = sqlsrv_fetch_array($result)) {
-            $json[] = array(
-            'NombreCampo' => $row["COLUMNA"],
-            'TipoCampo' => $row["DATA_TYPE"]
-             );
-        }
-        $jsonstring = json_encode($json);
-        echo $jsonstring;
-    }
-
-?>
-
-</select>
 <!-------------------------------------------------------------------->
 		<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#mimodal">
@@ -110,10 +74,10 @@
  </tr>
   </thead>
   <tbody>
-  <script var variableJS =Obtener();></script>
+  <script  language="javascript" var variableJS ="Obtener()";></script>
 <?php
-$nombreTabla = “<script document.write(variableJS)></script>”;
-echo "nombreTabla = $nombreTabla<br>"
+$nombreTablas = '<script>"document.write(variableJS)"</script>';
+echo "nombreTabla = $nombreTablas<br>"
 ?>
   <?php
       include "./extraer.php";
@@ -142,12 +106,14 @@ echo "nombreTabla = $nombreTabla<br>"
 </head>
 <body>
 		<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#mimodal">
- Ver Tipo de Datos
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#mimodal2">
+ MB
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="mimodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+
+<div class="modal fade" id="mimodal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
