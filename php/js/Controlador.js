@@ -1,7 +1,26 @@
-function Obtener(){
-    var select = document.getElementById("nombreTablas"), //El <select>
-        value = select.value, //El valor seleccionado
-        text = select.options[select.selectedIndex].innerText; //El texto de la opción seleccionada
+function select_tabla()
+{ 
+  
+ 
+ var name =  $("#select_tabla").val();
 
-        return text; 
+ //alert("Hola select = "+ object_id);
+
+    var ob = {name:name};
+
+     $.ajax({
+                type: "POST",
+                url:"./modelo_mostrar_datos.php",
+                data: ob,
+                beforeSend: function(objeto){
+                
+                },
+                success: function(data)
+                { 
+                 
+                 $("#panel_selector").html(data);
+            
+                }
+             });
 }
+
