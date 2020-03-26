@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="css/estilos.css">
-<script src="jquery-3.1.1.min.js"></script>
+<script src="./js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <title>modal</title>
 </head>

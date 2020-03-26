@@ -4,7 +4,7 @@
   $conn = sqlsrv_connect($serverName,$connectionInfo); 
 
    if($conn){
-      /*echo "conexion exitosa";*/
+      echo "conexion exitosa";
       $status = 1;
    }
    else{
