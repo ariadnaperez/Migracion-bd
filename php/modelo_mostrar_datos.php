@@ -1,6 +1,11 @@
 
  
  <table class="table table-condensed">
+ <tr>
+ <br></br>
+		<td ><b> Nombre Campo </b></td>
+		<td><b> Tipo de Dato</b></td>
+	</tr>
  <?php
 //echo "immpresion = ";
  $name = $_POST['name'];
