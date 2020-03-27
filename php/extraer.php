@@ -1,17 +1,16 @@
 <?php
-    include "./conexion.php";
+    include "./conexionServer.php";
 
+    //trae las bases de datos
     $sql1 = "SELECT name FROM sysdatabases order by crdate";
     $stmt1 = sqlsrv_query( $conn, $sql1 );
-
-    $sql2 = "SELECT name FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY name";
-    $stmt2 = sqlsrv_query( $conn, $sql2 );
     
-    $sql3 = "SELECT COLUMN_NAME,DATA_TYPE FROM Information_Schema.Columns
-    WHERE TABLE_NAME = 'Empleado'
-    ORDER BY COLUMN_NAME";
+    //trae las tablas de la base de datos
+    $sql3 = "SELECT * FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY name";
     $stmt3 = sqlsrv_query( $conn, $sql3 );
     
-
-
+    //trae los nombre de los campos y el tipo de dato
+    $sql4 = "SELECT COLUMN_NAME,DATA_TYPE FROM Information_Schema.Columns WHERE TABLE_NAME='$name'";
+    $stmt4 = sqlsrv_query( $conn, $sql4 );
 ?>
+

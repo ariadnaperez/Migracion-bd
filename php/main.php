@@ -12,7 +12,7 @@
 <body>
 	
 <p>Seleccione una Base de Datos</p>
-  <select class="form-control" name="nombreBds" id="nombreBds">
+  <select class="form-control" name="nombreBds" id="nombreBds" onchange="nombreBds();">
   <option value="default">----</option>
     <?php
       include "./extraer.php";
@@ -30,7 +30,7 @@
 
   
     <div >
-        <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_selector"> Tablas de la BD </button>
+        <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_selector" id="btn-tablas"> Tablas de la BD </button>
     	<div id="panel_listado">
     		<!-- Panel de datos -->
 
@@ -56,31 +56,21 @@
         <select class="form-control" id="select_tabla" onchange="select_tabla();">
         <option value=""> Seleccione la tabla</option>
             <?php
-             require 'conexion.php';
-             $sql="SELECT * FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY object_id";
-             $stmt = sqlsrv_query( $conn, $sql );
-             while ($row= sqlsrv_fetch_array($stmt,SQLSRV_FETCH_ASSOC)) {
+             require 'extraer.php';
+             while ($row= sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)) {
                  $name = $row['name'];
-                 $object_id=$row['object_id'];
-                 
                  ?>
- 
                 <option value="<?php echo $name; ?>"> <?php echo $name; ?></option>
-
-             <?php
-            }
-            sqlsrv_free_stmt($stmt);  
-
-            
+            <?php
+              }
+              sqlsrv_free_stmt($stmt3);   
             ?>
         </select>
         <div id="panel_selector"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button>
-       
       </div>
     </div>
-
   </div>
 </div>
