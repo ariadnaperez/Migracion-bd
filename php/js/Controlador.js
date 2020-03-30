@@ -1,15 +1,25 @@
 function nombreBds() {
-    var combo = document.getElementById("nombreBds");
-    var base_datos = combo.options[combo.selectedIndex].text;
+    var base_datos = document.getElementById("nombreBds").value;
 
     if (base_datos == 'Empleados') {
         select_tabla();
         habilita();
+        //console.log(base_datos);
+        $.ajax({
+            type: "POST",
+            url: "./usuario.php",
+            data: { "nombre": base_datos },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
     } else {
         alert("La Base de Datos seleccionada no esta disponible para migrarse");
         deshabilita();
     }
 }
+
 
 function select_tabla() {
     var name = $("#select_tabla").val();

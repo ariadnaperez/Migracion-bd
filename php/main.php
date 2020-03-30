@@ -17,12 +17,12 @@
     <?php
       include "./extraer.php";
       $i=0;
-      while( $row = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_ASSOC) ): 
+      while( $row = sqlsrv_fetch_array( $stmt1, SQLSRV_FETCH_ASSOC) ){
+        $name = $row['name']; 
     ?>
-    <option value="<?= $i?>"><?= $row['name']?></option>
+    <option value="<?php echo $name; ?>"><?php echo $name; ?></option>
     <?php 
-      $i++; 
-      endwhile; 
+     }
       sqlsrv_free_stmt( $stmt1);
     ?>
   </select>
