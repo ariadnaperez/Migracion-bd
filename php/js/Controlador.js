@@ -1,15 +1,25 @@
 function nombreBds() {
-    var combo = document.getElementById("nombreBds");
-    var base_datos = combo.options[combo.selectedIndex].text;
+    var combo = document.getElementById("nombreBds").value;
 
-    if (base_datos == 'Empleados') {
+    if (combo == 'Empleados') {
         select_tabla();
         habilita();
+        $.ajax({
+            type: "POST",
+            url: "./usuario.php",
+            data: { nombre: combo },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
     } else {
         alert("La Base de Datos seleccionada no esta disponible para migrarse");
         deshabilita();
     }
 }
+
+
 
 function select_tabla() {
     var name = $("#select_tabla").val();
@@ -27,9 +37,11 @@ function select_tabla() {
     });
 }
 
+
 function deshabilita() {
     document.getElementById('btn-tablas').disabled = true;
 }
+
 
 function habilita() {
     document.getElementById('btn-tablas').disabled = false;
