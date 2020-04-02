@@ -1,13 +1,14 @@
 function nombreBds() {
-    var combo = document.getElementById("nombreBds").value;
+    var base_datos = document.getElementById("nombreBds").value;
 
-    if (combo == 'Empleados') {
+    if (base_datos == 'Empleados') {
         select_tabla();
         habilita();
+        //console.log(base_datos);
         $.ajax({
             type: "POST",
             url: "./usuario.php",
-            data: { nombre: combo },
+            data: { "nombre": base_datos },
             dataType: 'json',
             success: function(data) {
                 console.log(data);
@@ -18,7 +19,6 @@ function nombreBds() {
         deshabilita();
     }
 }
-
 
 
 function select_tabla() {
