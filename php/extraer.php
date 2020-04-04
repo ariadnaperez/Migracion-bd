@@ -12,5 +12,6 @@
     //trae los nombre de los campos y el tipo de dato
     $sql4 = "SELECT COLUMN_NAME,DATA_TYPE FROM Information_Schema.Columns WHERE TABLE_NAME='$name'";
     $stmt4 = sqlsrv_query( $conn, $sql4 );
+    
 ?>
 

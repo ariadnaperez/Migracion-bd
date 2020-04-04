@@ -60,7 +60,7 @@
         <select class="form-control" id="select_tabla" onchange="select_tabla();">
         <option value=""> Seleccione la tabla</option>
             <?php
-             require 'extraer.php';
+             require './extraer.php';
              while ($row= sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)) {
                  $name = $row['name'];
                  ?>

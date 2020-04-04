@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf8"/>
 <?php
-    $conexion=oci_connect ("sys", "1234", "localhost/xe", '', OCI_SYSDBA);
+    $conexion=oci_connect ("sys", "oracle", "localhost/xe", '', OCI_SYSDBA);
 
     if(!$conexion){
     echo "Conexion error";
@@ -31,7 +31,7 @@
     }
 
     function borrarUsuario($conexion){
-        $sql1 = "DROP USER Empleados";
+        $sql1 = "DROP USER Empleados CASCADE";
 
         $stmt1 = oci_parse($conexion, $sql1);
         $ok1 = oci_execute( $stmt1 );
@@ -63,6 +63,7 @@
             echo "Conexion error";
         }else{
             echo "conexion a Empleados exitosa";
+            return $conexion2;
         }
     }
 
