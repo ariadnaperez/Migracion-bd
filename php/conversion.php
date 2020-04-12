@@ -38,6 +38,20 @@ include "./conexionServer.php";
     revisar_llaves_pk($conexion2, $conn);
     revisar_llaves_fk($conexion2, $conn);
     insertar_datos($conexion2,$conn);
+    borrar_campo_extra($conexion2, $conn);
+
+    function borrar_campo_extra($conexion2, $conn){
+        $sql3 = "SELECT name FROM sys.tables WHERE name != 'sysdiagrams'";
+        $stmt3 = sqlsrv_query( $conn, $sql3 );
+        while ($row = sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)){
+            $name = $row['name'];
+            $sql = "ALTER TABLE $name DROP COLUMN TEMPORAL";
+            $stmt1 = oci_parse($conexion2, $sql);
+            $ok1 = oci_execute( $stmt1 );
+            oci_free_statement( $stmt1 );
+        }
+        sqlsrv_free_stmt( $stmt3);
+    }
 
 
     function insertar_datos($conexion2,$conn)
@@ -46,6 +60,7 @@ include "./conexionServer.php";
         $stmt3 = sqlsrv_query( $conn, $sql3 );
         while ($row = sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)){
             $name = $row['name'];
+            echo "tabla actual:".$name;
             //conteo de tipo de dato date
             $sql10 = "SELECT count(*) 
             FROM Information_Schema.Columns WHERE TABLE_NAME='$name'
@@ -53,7 +68,7 @@ include "./conexionServer.php";
             $stmt10 = sqlsrv_query($conn, $sql10);
             //sqlsrv_execute( $stmt2);
             sqlsrv_fetch( $stmt10 );
-            $conteoDate=sqlsrv_get_field($stmt10,0);
+            $conteoDate = sqlsrv_get_field($stmt10,0);
 
             if($conteoDate > 0){
                 //trae nombre columnas que son de tipo date-datetime
@@ -72,7 +87,7 @@ include "./conexionServer.php";
                 $campos1 = implode(",", $rowDate);
 
 
-                //trae campos que NO son de tipo date-datetime
+                //trae nombre columnas que NO son de tipo date-datetime
                 $sql12 = "SELECT stuff((
                     SELECT ', ' + b.column_name
                     FROM Information_Schema.Columns b
@@ -94,33 +109,62 @@ include "./conexionServer.php";
                 //trae los datos restantes
                 $sql14 = "SELECT $campos2 FROM $name";
                 $stmt14 = sqlsrv_query($conn, $sql14);
+                    
 
-                while ( $row1 = sqlsrv_fetch_array($stmt13,SQLSRV_FETCH_ASSOC) || $row2 = sqlsrv_fetch_array($stmt14,SQLSRV_FETCH_ASSOC)){
-                    //$fields1 = implode(",", $rowDate);
-                    //$fields2 = implode(",", $rowOtro);
-                    $row1 = sqlsrv_fetch_array($stmt13,SQLSRV_FETCH_ASSOC);
-                    $row2a = sqlsrv_fetch_array($stmt14,SQLSRV_FETCH_ASSOC);
-                    //$values1b= $row1a->format('Y-m-d');
-                    $values1 = implode("', '",$row1->format('d/m/Y'));
-                    echo"<br>"."ARREGLO FECHAS:".$values1;
-                    $values2 = implode("', '", $row2a);
+                    //////////// contar los registros
+                    $sql16 = "SELECT * from $name";
+                    $params1 = array();
+                    $options1 =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+                    $stmt16 = sqlsrv_query($conn, $sql16, $params1, $options1);
+                    $row_count1 = sqlsrv_num_rows( $stmt16 );
+                    if ($row_count1 === false){
+                        echo "Error in retrieveing row count.";
+                    }
+                   ///////////
 
-                    echo "<br>"." F I E L D S : ".$campos1;
-                    echo "<br>"." F I E L D S : ".$campos2;
+                   ///contar el numero de columnas de tipo date
+                   $sql15 = "SELECT  column_name from Information_Schema.Columns 
+                   where data_type like 'date%' and TABLE_NAME = '$name'";
+                   $params = array();
+                   $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+                   $stmt15 = sqlsrv_query($conn, $sql15, $params, $options);
+                   $row_count = sqlsrv_num_rows( $stmt15 );
+                   if ($row_count === false){
+                       echo "Error in retrieveing row count.";
+                   }
+                   //////////////////
 
-                    echo "<br>"." V A L U E S : ".$values1;
-                    echo "<br>"." V A L U E S : ".$values2;
+                    $tmp = 0;
+                    echo "ROWCOUNT".$row_count1;
 
-                    $sql1 = "INSERT INTO $name ($campos1, $campos2) VALUES('$values1','$values2')";
+                while ( $tmp < $row_count1){
+                    $valores1="";
+                    $row1 = sqlsrv_fetch_array($stmt13,SQLSRV_FETCH_NUMERIC); //campos1
+                    $row2 = sqlsrv_fetch_array($stmt14,SQLSRV_FETCH_ASSOC);  //campos2
+
+                    for($i=0; $i < $row_count; $i++){
+                        $valores1 = $valores1."to_date('".$row1[$i]->format('Y/m/d')."', 'YYYY/MM/DD hh24:mi:ss'),";
+                    }
+
+                    $valores1 = trim($valores1, ',');
+                    $valores2 = implode("','", $row2);
+
+                   // '12/12/12','12/12/12','12/12/12','a','b','c'
+                    $sql1 = "INSERT INTO $name ($campos1,$campos2) VALUES($valores1,'$valores2')";
                     $stmt1 = oci_parse($conexion2, $sql1);
                     $ok1 = oci_execute( $stmt1 );
                     oci_free_statement( $stmt1 );
+                    $tmp = $tmp + 1;
                 }
 
                 sqlsrv_free_stmt($stmt11);
                 sqlsrv_free_stmt($stmt12);
                 sqlsrv_free_stmt($stmt13);
                 sqlsrv_free_stmt($stmt14);
+                sqlsrv_free_stmt($stmt15);
+                sqlsrv_free_stmt($stmt16);
+
+
             }else{
                 $sql4 = "SELECT stuff((
                     SELECT ', ' + b.column_name
@@ -139,8 +183,8 @@ include "./conexionServer.php";
                     while ( $row1 = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_ASSOC)){
                         $fields = implode(",", $row);
                         $values = implode("', '", $row1);
-                        echo "<br>"." F I E L D S : ".$fields;
-                        echo "<br>"." V A L U E S : ".$values;
+                        //echo "<br>"." F I E L D S : ".$fields;
+                        //echo "<br>"." V A L U E S : ".$values;
                         $sql1 = "INSERT INTO $name ($fields) VALUES('$values')";
                         $stmt1 = oci_parse($conexion2, $sql1);
                         $ok1 = oci_execute( $stmt1 );
