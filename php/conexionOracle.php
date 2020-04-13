@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf8"/>
 <?php
-    $conexion=oci_connect ("sys", "oracle", "localhost/xe", '', OCI_SYSDBA);
+    $conexion=oci_connect ("sys", "1234", "localhost/xe", '', OCI_SYSDBA);
 
     if(!$conexion){
     echo "Conexion error";
