@@ -9,8 +9,19 @@
   <script type="text/javascript" src="./Bootstrap/js2/bootstrap.min.js"></script>
   
 	<script type="text/javascript" src="./js/Controlador.js"></script>
+ 
+
 </head>
-<body style = "background-color: #f0d9af">
+<body style = "background-color: #f0d9af" onload="ocultar()">
+
+<script>
+    function ocultar() {
+          document.getElementById('btn-tablas').style.display = 'none';
+          document.getElementById('btn-conversion').style.display = 'none';
+          document.getElementById('btn-MIGRACION').style.display = 'none';
+    }
+</script>
+
 <div class="container" id="div-form">
 <h1 style="text-align: center;" class="display-4">Migracion Base de Datos</h1>
 <br><br>
@@ -33,8 +44,21 @@
   <br></br> 
     <div >
         <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_selector" id="btn-tablas"> Tablas de la BD </button>
-        <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_conversion" id="btn-conversion"> Conversion de Datos </button>
-        <button class="btn btn-info btn-md"  id="btn-MIGRACION"> Migrar BD </button>
+        <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_conversion" id="btn-conversion"> Conversion de Datos</button>
+        <button class="btn btn-info btn-md"  id="btn-MIGRACION" onclick="hacer_click()"> Migrar BD </button>
+
+        <script type="text/javascript">
+    function hacer_click()
+    {
+      window.location.href="conversion.php";
+      alert ("Migracion exitosa");    
+      self.location.reload();
+    }
+    </script>
+
+      
+  
+
       <div id="panel_listado">
     	</div>
     </div>
@@ -124,5 +148,3 @@
     </div>
   </div>
 </div>
-
-

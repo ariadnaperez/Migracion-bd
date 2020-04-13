@@ -1,4 +1,8 @@
 function nombreBds() {
+    document.getElementById('btn-tablas').style.display = 'inline';
+    document.getElementById('btn-conversion').style.display = 'inline';
+    document.getElementById('btn-MIGRACION').style.display = 'inline';
+
     var base_datos = document.getElementById("nombreBds").value;
 
     if (base_datos == 'Empleados') {
@@ -40,9 +44,13 @@ function select_tabla() {
 
 function deshabilita() {
     document.getElementById('btn-tablas').disabled = true;
+    document.getElementById('btn-conversion').disabled = true;
+    document.getElementById('btn-MIGRACION').disabled = true;
 }
 
 
 function habilita() {
     document.getElementById('btn-tablas').disabled = false;
+    document.getElementById('btn-conversion').disabled = false;
+    document.getElementById('btn-MIGRACION').disabled = false;
 }

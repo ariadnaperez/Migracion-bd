@@ -1,6 +1,8 @@
 <?php
 include "./conexionOracle.php";
 include "./conexionServer.php";
+revisar_exis_usuario($conexion);
+
 
     /////////////  SQL SERVER
     $conn = sqlsrv_connect($serverName,$connectionInfo); 

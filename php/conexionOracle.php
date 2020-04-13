@@ -7,8 +7,8 @@
     echo "Conexion error";
     }else{
         echo "Conexion con exito a oracle!"."<br>";
-         revisar_exis_usuario($conexion);
-        conexionNuevoUsuario();
+         //revisar_exis_usuario($conexion);
+        //conexionNuevoUsuario();
     }
 
     function revisar_exis_usuario($conexion)
