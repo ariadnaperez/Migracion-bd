@@ -1,6 +1,6 @@
 <?php
   $serverName= 'localhost';
-  $connectionInfo=array ("Database"=>"Empleados","UID"=>"sa","PWD"=>"asd.4567","CharacterSet"=>"UTF-8");
+  $connectionInfo=array ("Database"=>"Empleados","UID"=>"sa1","PWD"=>"1234","CharacterSet"=>"UTF-8");
   $conn = sqlsrv_connect($serverName,$connectionInfo); 
 
    if($conn){
