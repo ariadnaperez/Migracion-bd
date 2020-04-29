@@ -9,8 +9,9 @@
     $sql3 = "SELECT * FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY name";
     $stmt3 = sqlsrv_query( $conn, $sql3 );
     
-    //trae los nombre de los campos y el tipo de dato
-    $sql4 = "SELECT COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH FROM Information_Schema.Columns WHERE TABLE_NAME='$name'";
+    //trae los nombre de los campos,el tipo de dato y el maximo de caracteres
+    $sql4 = "SELECT COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH FROM
+     Information_Schema.Columns WHERE TABLE_NAME='$name'";
     $stmt4 = sqlsrv_query( $conn, $sql4 );
     
 ?>

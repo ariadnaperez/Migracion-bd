@@ -3,7 +3,6 @@ include "./conexionOracle.php";
 include "./conexionServer.php";
 revisar_exis_usuario($conexion);
 
-
     /////////////  SQL SERVER
     $conn = sqlsrv_connect($serverName,$connectionInfo); 
 
@@ -13,13 +12,10 @@ revisar_exis_usuario($conexion);
         }else{
             echo "<br>"."conexion a Empleados exitosa";
         };
-
-
         
     ////////////////////////// CONSULTAS SQL SERVER
     $sql3 = "SELECT name FROM sys.tables WHERE name != 'sysdiagrams' ORDER BY name";
     $stmt3 = sqlsrv_query( $conn, $sql3 );
-
 
     while ($row = sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)) {
         $name = $row['name'];
@@ -33,8 +29,6 @@ revisar_exis_usuario($conexion);
         }
         sqlsrv_free_stmt($stmt4);
     }
-
-
 
     sqlsrv_free_stmt($stmt3);
     revisar_llaves_pk($conexion2, $conn);
@@ -55,20 +49,17 @@ revisar_exis_usuario($conexion);
         sqlsrv_free_stmt( $stmt3);
     }
 
-
     function insertar_datos($conexion2,$conn)
     {
         $sql3 = "SELECT name FROM sys.tables WHERE name != 'sysdiagrams'";
         $stmt3 = sqlsrv_query( $conn, $sql3 );
         while ($row = sqlsrv_fetch_array($stmt3,SQLSRV_FETCH_ASSOC)){
             $name = $row['name'];
-            echo "tabla actual:".$name;
             //conteo de tipo de dato date
             $sql10 = "SELECT count(*) 
             FROM Information_Schema.Columns WHERE TABLE_NAME='$name'
             and DATA_TYPE like 'date%'";
             $stmt10 = sqlsrv_query($conn, $sql10);
-            //sqlsrv_execute( $stmt2);
             sqlsrv_fetch( $stmt10 );
             $conteoDate = sqlsrv_get_field($stmt10,0);
 
@@ -87,7 +78,6 @@ revisar_exis_usuario($conexion);
                 $stmt11 = sqlsrv_query($conn, $sql11);
                 $rowDate = sqlsrv_fetch_array($stmt11,SQLSRV_FETCH_ASSOC);
                 $campos1 = implode(",", $rowDate);
-
 
                 //trae nombre columnas que NO son de tipo date-datetime
                 $sql12 = "SELECT stuff((
@@ -110,19 +100,17 @@ revisar_exis_usuario($conexion);
                 
                 //trae los datos restantes
                 $sql14 = "SELECT $campos2 FROM $name";
-                $stmt14 = sqlsrv_query($conn, $sql14);
-                    
-
+                $stmt14 = sqlsrv_query($conn, $sql14); 
                     //////////// contar los registros
                     $sql16 = "SELECT * from $name";
                     $params1 = array();
                     $options1 =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
                     $stmt16 = sqlsrv_query($conn, $sql16, $params1, $options1);
                     $row_count1 = sqlsrv_num_rows( $stmt16 );
+                    
                     if ($row_count1 === false){
-                        echo "Error in retrieveing row count.";
+                        echo "Error al recuperar el recuento de filas.";
                     }
-                   ///////////
 
                    ///contar el numero de columnas de tipo date
                    $sql15 = "SELECT  column_name from Information_Schema.Columns 
@@ -132,13 +120,10 @@ revisar_exis_usuario($conexion);
                    $stmt15 = sqlsrv_query($conn, $sql15, $params, $options);
                    $row_count = sqlsrv_num_rows( $stmt15 );
                    if ($row_count === false){
-                       echo "Error in retrieveing row count.";
+                       echo "Error al recuperar el recuento de filas.";
                    }
                    //////////////////
-
                     $tmp = 0;
-                    echo "ROWCOUNT".$row_count1;
-
                 while ( $tmp < $row_count1){
                     $valores1="";
                     $row1 = sqlsrv_fetch_array($stmt13,SQLSRV_FETCH_NUMERIC); //campos1
@@ -147,25 +132,23 @@ revisar_exis_usuario($conexion);
                     for($i=0; $i < $row_count; $i++){
                         $valores1 = $valores1."to_date('".$row1[$i]->format('Y/m/d')."', 'YYYY/MM/DD hh24:mi:ss'),";
                     }
-
                     $valores1 = trim($valores1, ',');
                     $valores2 = implode("','", $row2);
 
-                   // '12/12/12','12/12/12','12/12/12','a','b','c'
+                    // '12 / 12/12 ',' 12/12/12 ',' 12/12/12 ',' a ',' b ',' c '
+
                     $sql1 = "INSERT INTO $name ($campos1,$campos2) VALUES($valores1,'$valores2')";
                     $stmt1 = oci_parse($conexion2, $sql1);
                     $ok1 = oci_execute( $stmt1 );
                     oci_free_statement( $stmt1 );
                     $tmp = $tmp + 1;
                 }
-
                 sqlsrv_free_stmt($stmt11);
                 sqlsrv_free_stmt($stmt12);
                 sqlsrv_free_stmt($stmt13);
                 sqlsrv_free_stmt($stmt14);
                 sqlsrv_free_stmt($stmt15);
                 sqlsrv_free_stmt($stmt16);
-
 
             }else{
                 $sql4 = "SELECT stuff((
@@ -185,8 +168,6 @@ revisar_exis_usuario($conexion);
                     while ( $row1 = sqlsrv_fetch_array($stmt,SQLSRV_FETCH_ASSOC)){
                         $fields = implode(",", $row);
                         $values = implode("', '", $row1);
-                        //echo "<br>"." F I E L D S : ".$fields;
-                        //echo "<br>"." V A L U E S : ".$values;
                         $sql1 = "INSERT INTO $name ($fields) VALUES('$values')";
                         $stmt1 = oci_parse($conexion2, $sql1);
                         $ok1 = oci_execute( $stmt1 );
@@ -211,9 +192,6 @@ function crearTabla($conexion2,$name){
         oci_free_statement( $stmt1 );
         return $ok1;
 }
-
-
-
 
 function cambio_datos($conexion2,$nombreColumna,$tipoDato,$name,$conn)
 {
@@ -283,7 +261,6 @@ function revisar_llaves_fk($conexion2, $conn){
             INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu  ON FK.name = kcu.CONSTRAINT_NAME
             WHERE kcu.COLUMN_NAME = '$nombreColumna' AND PFK.name = '$name'";
             $stmt2 = sqlsrv_query($conn, $sql2);
-            //sqlsrv_execute( $stmt2);
             sqlsrv_fetch( $stmt2 );
             $conteoFK=sqlsrv_get_field($stmt2,0);
 
@@ -295,7 +272,6 @@ function revisar_llaves_fk($conexion2, $conn){
             INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu  ON FK.name = kcu.CONSTRAINT_NAME
             WHERE kcu.COLUMN_NAME = '$nombreColumna' AND PFK.name = '$name'";
             $stmt6 = sqlsrv_query($conn, $sql6);
-            //sqlsrv_execute( $stmt2);
             sqlsrv_fetch( $stmt6 );
             $nombreFk=sqlsrv_get_field($stmt6,0);
             $numCarac = strlen($nombreFk);
@@ -315,7 +291,6 @@ function revisar_llaves_fk($conexion2, $conn){
             INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu  ON FK.name = kcu.CONSTRAINT_NAME
             WHERE kcu.COLUMN_NAME = '$nombreColumna' AND PFK.name = '$name'";
             $stmt5 = sqlsrv_query($conn, $sql5);
-            //sqlsrv_execute( $stmt5);
             sqlsrv_fetch($stmt5);
             $consulta5 = sqlsrv_get_field($stmt5,0);
         

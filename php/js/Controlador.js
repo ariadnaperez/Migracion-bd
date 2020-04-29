@@ -8,10 +8,8 @@ function nombreBds() {
     if (base_datos == 'Empleados') {
         select_tabla();
         habilita();
-        //console.log(base_datos);
         $.ajax({
             type: "POST",
-            url: "./usuario.php",
             data: { "nombre": base_datos },
             dataType: 'json',
             success: function(data) {
@@ -19,7 +17,11 @@ function nombreBds() {
             }
         });
     } else {
-        alert("La Base de Datos seleccionada no esta disponible para migrarse");
+        swal({
+            title: '¡ERROR!',
+            text: 'La BD seleccionada no esta disponible para migrarse',
+            type: 'error',
+          })
         deshabilita();
     }
 }
@@ -54,3 +56,4 @@ function habilita() {
     document.getElementById('btn-conversion').disabled = false;
     document.getElementById('btn-MIGRACION').disabled = false;
 }
+

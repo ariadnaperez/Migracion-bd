@@ -18,7 +18,7 @@
         oci_execute( $stmt);
         oci_fetch($stmt);
         $conteo=strval(oci_result($stmt,"CONTEO_USER"));
-        if($conteo=1){
+        if($conteo==1){
             borrarUsuario($conexion);
             crearUsuario($conexion);
         }

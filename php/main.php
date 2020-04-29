@@ -2,14 +2,16 @@
 <html>
 <head>
 <title>Migración Base de Datos</title>
+<link rel="shortcut icon" type="image/png" href="./img/favicon.png"/>
 <link rel="stylesheet" type="text/css" href="./css/estilos.css">
+
 	<link rel="stylesheet" type="text/css" href="./Bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="./Bootstrap/css/bootstrap-theme.min.css">
 	<script type="text/javascript" src="./Bootstrap/js2/jquery.min.js"></script>
   <script type="text/javascript" src="./Bootstrap/js2/bootstrap.min.js"></script>
-  
-	<script type="text/javascript" src="./js/Controlador.js"></script>
- 
+  <script type="text/javascript" src="./js/Controlador.js"></script>
+  <link rel="stylesheet" type="text/css" href="sweetalert/sweetalert2.min.css">
+<script type="text/javascript" src="sweetalert/sweetalert2.min.js" ></script>
 
 </head>
 <body style = "background-color: #f0d9af" onload="ocultar()">
@@ -45,13 +47,29 @@
     <div >
         <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_selector" id="btn-tablas"> Tablas de la BD </button>
         <button class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal_conversion" id="btn-conversion"> Conversion de Datos</button>
-        <button class="btn btn-info btn-md"  id="btn-MIGRACION" onclick="hacer_click()"> Migrar BD </button>
+        <button class="btn btn-info btn-md"  id="btn-MIGRACION" > Migrar BD </button>
 
-        <script type="text/javascript">
+<script type="text/javascript">
+  $(document).ready(function(){
+$("#btn-MIGRACION").click(function(){
+  swal({
+    title:'Migracion Exitosa',
+    text:"La base de Datos se Migro exitosamente",
+    type:'success',
+    timer: 20000
+    
+  }).then(function () {
+    hacer_click();
+    })
+  window.location.href="conversion.php";
+})
+  })
+</script>
+
+    <script type="text/javascript">
     function hacer_click()
     {
-      window.location.href="conversion.php";
-      alert ("Migracion exitosa");    
+       
       self.location.reload();
     }
     </script>
@@ -112,10 +130,10 @@
     <div class="modal-content">
       <div class="modal-header" style="background-color: #084B8A; color:white;">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"> Seleccione una Tabla </h4>
+        <h4 class="modal-title"> Conversion de los tipos de datos de SQL Server a Oracle </h4>
       </div>
       <div class="modal-body">
-        <p> Conversion de los tipos de datos de SQL Server a Oracle </p>
+        <p> Tipos de datos de SQL Server a Oracle </p>
 
         <table class="table table-condensed">
  <tr>
@@ -125,7 +143,7 @@
 	</tr>
 	<tr>
 		<td> INT </td>
-		<td>NUMBER </td>
+		<td>NUMBER(10) </td>
 	</tr>
 	<tr>
 		<td> VARCHAR </td>
@@ -133,7 +151,7 @@
 	</tr>
   <tr>
 		<td>MONEY  </td>
-		<td>NUMBER </td>
+		<td>NUMBER(19,4) </td>
 	</tr>
   <tr>
 		<td> DATETIME </td>
